@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WindowsPerformanceRecorder
+    Author="Bill Ticehurst"
+    Comments="TypeScript ETW profiles"
+    Company="Microsoft Corporation"
+    Copyright="Microsoft Corporation"
+    Version="1.0">
+  <Profiles>
+    <!--<SystemCollector
+        Id="SystemCollector_TypeScript"
+        Name="NT Kernel Logger">
+      <BufferSize Value="512"/>
+      <Buffers Value="3" PercentageOfTotalMemory="true"/>
+    </SystemCollector>-->
+
+    <EventCollector
+        Id="EventCollector_TypeScript"
+        Name="WPR TypeScript Event Collector">
+      <BufferSize Value="256"/>
+      <Buffers Value="5" PercentageOfTotalMemory="true"/>
+    </EventCollector>
+    <!--<SystemProvider Id="SystemProvider_TypeScript" Base="SystemProvider_Base">
+      <Keywords Operation="Add">
+        <Keyword Value="DiskIO"/>
+        <Keyword Value="FileIO"/>
+        <Keyword Value="Filename"/>
+        <Keyword Value="HardFaults"/>
+        <Keyword Value="Memory"/>
+        <Keyword Value="MemoryInfo"/>
+      </Keywords>
+    </SystemProvider>-->
+    <EventProvider Id="tsserverEventSource" Name="ac4e9dd1-3a7a-5022-fc37-f2394bc4f09e"></EventProvider>
+    <EventProvider Id="TypeScriptEventSource" Name="*TypeScriptEventSource">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0" />
+      </CaptureStateOnSave>
+    </EventProvider>
+    <!-- Needed for Task activity tracking -->
+    <EventProvider Id="System.Threading.Tasks.TplEventSource" Name="2e5dba47-a3d2-4d16-8ee0-6671ffdcd7b5">
+      <Keywords>
+        <Keyword Value="0x80"/>
+      </Keywords>
+    </EventProvider>
+    <Profile Description="TypeScript logging"
+        Name="TypeScript"
+        Id="TypeScript.Verbose.File"
+        DetailLevel="Verbose"
+        LoggingMode="File">
+      <Collectors>
+        <!--<SystemCollectorId Value="SystemCollector_TypeScript">
+          <SystemProviderId Value="SystemProvider_TypeScript"/>
+        </SystemCollectorId>-->
+        <EventCollectorId Value="EventCollector_TypeScript">
+          <EventProviders>
+            <EventProviderId Value="tsserverEventSource"/>
+            <EventProviderId Value="TypeScriptEventSource"/>
+            <EventProviderId Value="System.Threading.Tasks.TplEventSource"/>
+          </EventProviders>
+        </EventCollectorId>
+      </Collectors>
+    </Profile>
+    <Profile Description="TypeScript logging"
+        Base="TypeScript.Verbose.File"
+        Name="TypeScript"
+        Id="TypeScript.Verbose.Memory"
+        DetailLevel="Verbose"
+        LoggingMode="Memory">
+    </Profile>
+  </Profiles>
+</WindowsPerformanceRecorder>
