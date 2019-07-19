@@ -12,7 +12,7 @@ Install from npm via: `npm install @microsoft/typescript-etw`
 
 Since this dependency only supports Windows, consider using the `--save-optional` flag to add this as an optional dependency or `--no-save` to omit this as a listed dependency altogether.
 
-The module will build from source using node-gyp.
+The module will build from source using node-gyp. Use the flag `--target_arch=ia32` or `--target_arch=x64` to target a specific architecture.
 
 If you would like to take advantage of types for this package information, install them from DefinitelyTyped via: `npm install @types/microsoft__typescript-etw --save-dev`
 
@@ -20,7 +20,7 @@ This will allow you to compile your code with types even if the optional depende
 
 ## Usage
 
-This module is designed to be used as an optional dependency. Require it inside of a try-catch block in order to handle the situation where it is not found. For example:
+Be aware that calling `require` on this package may return `undefined` if it fails the compatibility checks in `index.js`. It may also throw an exception if it is an optional dependency that is not installed. This example shows a way to `require` this module that accounts for both cases:
 
 ```javascript
 var etw;

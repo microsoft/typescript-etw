@@ -181,7 +181,7 @@ namespace typescript_etw {
 	}
 
 	/*
-	 * The code from here down is for tracking activities (i.e. ranges demarked by a start/stop pair of events
+	 * The code from here down is for tracking activities (i.e. ranges demarcated by a start/stop pair of events
 	 * that can later be tied together with the events within them, and other activities they spawn.
 	 *
 	 * This code could probably be refactored to be a little less repetitive, however note that the event name
