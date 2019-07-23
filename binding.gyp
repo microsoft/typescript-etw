@@ -21,7 +21,11 @@
           "IgnoreAllDefaultLibraries": "true", # /NODEFAULTLIB (see notes in main.cc)
           "ImageHasSafeExceptionHandlers": "false"
         }
-      }
+      },
+      # Re-enable these warnings that are disabled by default
+      # ('!' causes these to be removed from the already existing "msvs_disabled_warnings" list)
+      # These warnings are needed to comply with Microsoft security requirements
+      "msvs_disabled_warnings!": [4244, 4267]
     },
     {
         "target_name": "copy_binary",
