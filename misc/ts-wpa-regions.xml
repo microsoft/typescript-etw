@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<InstrumentationManifest>
+  <Instrumentation>
+    <Regions>
+      <RegionRoot Guid="{ced10e1c-50c7-4890-add8-fee4b3a9557f}"
+                  Name="tsserver-commands"
+                  FriendlyName="Commands">
+        <Region Guid="{e0647f08-d344-4734-a306-4eba660bb271}"
+                Name="tsserver-command"
+                FriendlyName="Command">
+          <Start>
+            <Event Provider="{ac4e9dd1-3a7a-5022-fc37-f2394bc4f09e}" Id="397" Version="0" />
+          </Start>
+          <Stop>
+            <Event Provider="{ac4e9dd1-3a7a-5022-fc37-f2394bc4f09e}" Id="441" Version="0" />
+          </Stop>
+          <Naming>
+            <PayloadBased NameField="command" />
+          </Naming>
+          <Match>
+            <Event PID="true" AID="true"/>
+          </Match>
+          <Region Guid="{84b53965-56ed-4164-8d70-be18707f34e7}"
+                Name="tsserver-command-updategraph"
+                FriendlyName="UpdateGraph">
+            <Start>
+              <Event Provider="{ac4e9dd1-3a7a-5022-fc37-f2394bc4f09e}" Id="565" Version="0" />
+            </Start>
+            <Stop>
+              <Event Provider="{ac4e9dd1-3a7a-5022-fc37-f2394bc4f09e}" Id="597" Version="0" />
+            </Stop>
+            <Match>
+              <Event PID="true" AID="true"/>
+              <Parent PID="true" TID="true">
+                <Payload FieldName="RelatedActivityID" TargetFieldName="ActivityID"></Payload>
+              </Parent>
+              <SelfNest PID="true" TID="true"/>
+            </Match>
+          </Region>
+        </Region>
+      </RegionRoot>
+    </Regions>
+  </Instrumentation>
+</InstrumentationManifest>

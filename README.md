@@ -1,5 +1,48 @@
+# @microsoft/typescript-etw
 
-# Contributing
+**@microsoft/typescript-etw** is a native Node.js module for logging ETW events for the TypeScript project.
+
+## Compatibility
+
+ETW is a Windows technology, so this module only works on Windows (Win7 or later). The module is built using the N-API interface and works on Node.js 8.9 or later. (See https://nodejs.org/docs/v8.9.0/api/n-api.html)
+
+## Installing
+
+Install from npm via: `npm install @microsoft/typescript-etw`
+
+Since this dependency only supports Windows, consider using the `--save-optional` flag to add this as an optional dependency or `--no-save` to omit this as a listed dependency altogether.
+
+The module will build from source using node-gyp. Use the flag `--target_arch=ia32` or `--target_arch=x64` to target a specific architecture.
+
+If you would like to take advantage of types for this package information, install them from DefinitelyTyped via: `npm install @types/microsoft__typescript-etw --save-dev`
+
+This will allow you to compile your code with types even if the optional dependency was not installed.
+
+## Usage
+
+Be aware that calling `require` on this package may return `undefined` if it fails the compatibility checks in `index.js`. It may also throw an exception if it is an optional dependency that is not installed. This example shows a way to `require` this module that accounts for both cases:
+
+```javascript
+var etw;
+try {
+    etw = require('typescript-etw');
+} catch (e) {
+    // Optional package not found
+    etw = undefined;
+}
+```
+
+Then you can log events conditionally:
+
+```javascript
+if (etw) etw.logInfoEvent('message');
+```
+
+## Misc
+
+See the `notes.txt` file for details on the implementation, TODOs, etc.
+
+## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us

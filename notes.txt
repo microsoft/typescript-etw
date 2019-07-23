@@ -1,0 +1,56 @@
+# Usage
+
+To start a trace of this and the VS TypeScript language service - later stop it:
+
+```
+wpr -start .\ts-wpr-profile.wprp!TypeScript -filemode
+wpr -marker "point of interest"
+wpr -stop tstrace.etl "example description"
+```
+
+Then to open one of:
+
+```
+PerfView tstrace.etl
+wpa tstrace.etl
+```
+
+# TODO
+
+ - Try "wpr -start ts-wpr-profile.wprp!TypeScript -start FileIO" and capture to circular buffer with marker
+ - Try out WPA again with activities for both providers.
+ - How should this handle initialization and multiple instances?
+   - Need to use thread-local storage for the activity stack.
+ - Instructions for circular logging and capturing after incident.
+   - https://docs.microsoft.com/en-us/windows-hardware/test/wpt/logging-mode
+
+
+# More info
+ - https://nodejs.org/dist/latest-v10.x/docs/api/n-api.html
+ - https://docs.microsoft.com/en-us/windows/desktop/tracelogging/trace-logging-portal
+ - https://docs.microsoft.com/en-us/windows/desktop/tracelogging/tracelogging-c-cpp-tracelogging-examples
+ - https://docs.microsoft.com/en-us/windows-hardware/test/wpt/wpr-command-line-options
+
+# Implementation notes
+
+## Removing the CRT problems:
+
+ - NAPI_MODULE macro depends on CRT initialization. Expanded and moved to DllMain.
+ - Delay loading depends on delayimp.lib, which depends on CRT. Manually imported functions.
+ - Some headers required CRT functions in debug builds. Used intrinsics for those functions.
+ - Some default compiler options set security features that depend on CRT (e.g. "/GS"). Disabled those.
+ - Disabled C++ exceptions and run-time type information.
+
+## State, threading, and instances
+
+ETW is generally a singleton - either the provider is on or off. This would imply global state.
+However are the Activity stacks thread specific?
+ - Does JS always run on the same OS thread in V8? If so, could use TLS.
+   - It would seem to, at least in Node.js, as it runs on the event loop.
+ - The issue is when to delete the activity (on Stop for the thread).
+ - But could multiple Node.js contexts be interleaving on the same thread?
+   - I don't see why not.
+   - However, the interleaved operation should still complete full nested start/stop activities within a JS invocation.
+ - This basically means that on any thread, the activity stack is still going to fully populat and unwind
+   - But other threads may run in parallel and log activies. So still need to use TLS.
+   - Can always bail if logging has never been started.
