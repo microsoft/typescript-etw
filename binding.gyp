@@ -19,7 +19,8 @@
         "VCLinkerTool": {
           "EntryPointSymbol": "DllMain",       # /ENTRY:DllMain (see notes in main.cc)
           "IgnoreAllDefaultLibraries": "true", # /NODEFAULTLIB (see notes in main.cc)
-          "ImageHasSafeExceptionHandlers": "false"
+          "ImageHasSafeExceptionHandlers": "false",
+          "Profile": "true"
         }
       },
       # Re-enable these warnings that are disabled by default
